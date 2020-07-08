@@ -3,7 +3,6 @@
 
 ensemblToGenes <- function(data = data, 
                            column = column) {
-  
   ensembl <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
   ensembl <- biomaRt::getBM(attributes = c('ensembl_gene_id','external_gene_name'),
                             filters = 'ensembl_gene_id',
