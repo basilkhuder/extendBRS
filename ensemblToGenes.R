@@ -7,10 +7,10 @@ ensemblToGenes <- function(dataframe = data,
                             values = data[,column], 
                             mart = ensembl)
                             
-  counts <- dplyr::filter(counts, Chr %in% ensembl$ensembl_gene_id)
+  data <- dplyr::filter(data, column %in% ensembl$ensembl_gene_id)
   colnames(ensembl)[1] <- column
-  counts <- full_join(counts, ensembl, by = column)
-  counts <- dplyr::select(counts, c(external_gene_name, everything()), -column)
-  counts <- dplyr::rename(counts, !!column := external_gene_name)
-  return(counts)
+  data <- full_join(data, ensembl, by = column)
+  data <- dplyr::select(data, c(external_gene_name, everything()), -column)
+  data <- dplyr::rename(data, !!column := external_gene_name)
+  return(data)
 } 
