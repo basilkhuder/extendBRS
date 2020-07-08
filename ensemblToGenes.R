@@ -6,7 +6,6 @@ ensemblToGenes <- function(dataframe = data,
                             filters = 'ensembl_gene_id',
                             values = data[,column], 
                             mart = ensembl)
-  
   data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_gene_id)
   colnames(ensembl)[1] <- column
   data <- full_join(data, ensembl, by = column)
