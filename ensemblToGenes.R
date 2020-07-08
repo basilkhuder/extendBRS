@@ -1,4 +1,4 @@
-ensemblToGenes <- function(dataframe = data, 
+ensemblToGenes <- function(data = data, 
                            column = column) {
   
   ensembl <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
