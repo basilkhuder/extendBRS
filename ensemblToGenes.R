@@ -1,3 +1,6 @@
+#Takes a dataframe and column that has Ensembl IDs and returns dataframe with column as Gene IDs. If an Ensembl ID does not have an associated Gene ID, that ID row will 
+#be filtered out. 
+
 ensemblToGenes <- function(data = data, 
                            column = column) {
   
