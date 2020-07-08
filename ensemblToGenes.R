@@ -4,7 +4,7 @@ ensemblToGenes <- function(dataframe = data,
   ensembl <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
   ensembl <- biomaRt::getBM(attributes = c('ensembl_gene_id','external_gene_name'),
                             filters = 'ensembl_gene_id',
-                            values = data, 
+                            values = data[,column], 
                             mart = ensembl)
                             
   counts <- dplyr::filter(counts, Chr %in% ensembl$ensembl_gene_id)
