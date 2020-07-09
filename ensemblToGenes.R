@@ -1,5 +1,11 @@
-#Takes a dataframe and column that has Ensembl IDs and returns dataframe with column as Gene IDs. If an Ensembl ID does not have an associated Gene ID, that ID row will 
-#be filtered out. Type must either be transcript (Ensembl transcript IDs) or genes (for gene IDs.) 
+#' Takes a dataframe and column that has Ensembl IDs and returns dataframe with column as Gene IDs.
+#' @param data A dataframe
+#' @param column The name of the column that has the Ensembl IDs. 
+#' @param type Whether the type of Ensembl IDs are transcript or gene
+#' @return A dataframe with column now as Ensembl IDs
+#' @examples
+#' ensemblToGenes(data = counts.table, column = "Genes", type = "gene")
+#' @export
 
 ensemblToGenes <- function(data = data, 
                            column = column,
