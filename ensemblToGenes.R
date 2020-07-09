@@ -4,14 +4,13 @@
 ensemblToGenes <- function(data = data, 
                            column = column) {
   
-  ensembl <- biomaRt::useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl")
-  ensembl <- biomaRt::getBM(attributes = c('ensembl_gene_id','external_gene_name'),
-                            filters = 'ensembl_gene_id',
-                            values = data[,column], 
-                            mart = ensembl)
+  download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
+                destfile = "ensembl_id_and_gene_names.txt")
+  
+  ensembl <- readr::read_tsv("ensembl_id_and_gene_names.txt")
   data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_gene_id)
   colnames(ensembl)[1] <- column
-  data <- full_join(data, ensembl, by = column)
+  data <- dplyr::full_join(data, ensembl, by = column)
   data <- dplyr::select(data, c(external_gene_name, everything()), -column)
   data <- dplyr::rename(data, !!column := external_gene_name)
   return(data)
