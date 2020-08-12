@@ -8,6 +8,6 @@
 #' @export
 
 fictitiousSeurat <- function(num.genes, num.barcodes, probs.zero = NULL) { 
-
+  #TODO
 } 
 
