@@ -21,7 +21,7 @@ fictitiousSeurat <- function(num.genes, num.barcodes, probs.zero = NULL) {
   barcodes <- dplyr::pull(barcodes, barcodes)
   
    #download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/sc_counts_probability_vector.Robj", 
-                  destfile = "sc_counts_probability_vector.Robj")
+   #              destfile = "sc_counts_probability_vector.Robj")
   
   #load("sc_counts_probability_vector.Robj")
   #gene.counts <- sample.int(4000, num.genes * num.barcodes, prob = prob)
