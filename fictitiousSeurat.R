@@ -26,7 +26,7 @@ fictitiousSeurat <- function(num.genes, num.barcodes, probs.zero = NULL) {
   load("sc_counts_probability_vector.Robj")
   gene.counts <- sample.int(4000, num.genes * num.barcodes, prob = probs)
   mat <- Matrix::Matrix(gene.counts, nrow = num.genes, ncol = num.barcodes, sparse = TRUE)
-  mat <- CreateSeuratObject(mat)
+  mat <- Seurat::CreateSeuratObject(mat)
   return(mat) 
 } 
 
