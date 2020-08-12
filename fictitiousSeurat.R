@@ -6,7 +6,7 @@
 #' fictitiousSeurat(num.genes = 1000, num.barcodes = 1000)
 #' @export
 
-fictitiousSeurat <- function(num.genes, num.barcodes, probs.zero = NULL) { 
+fictitiousSeurat <- function(num.genes, num.barcodes) { 
   download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
                   destfile = "ensembl_id_and_gene_names.txt")
   ensembl.genes <- readr::read_tsv("ensembl_id_and_gene_names.txt")
