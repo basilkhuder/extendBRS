@@ -20,13 +20,13 @@ fictitiousSeurat <- function(num.genes, num.barcodes, probs.zero = NULL) {
   barcodes <- dplyr::slice_n(barcodes, n = num.barcodes)
   barcodes <- dplyr::pull(barcodes, barcodes)
   
-   #download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/sc_counts_probability_vector.Robj", 
-   #              destfile = "sc_counts_probability_vector.Robj")
+   download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/sc_counts_probability_vector.Robj", 
+                 destfile = "sc_counts_probability_vector_pr.Robj")
   
-  #load("sc_counts_probability_vector.Robj")
-  #gene.counts <- sample.int(4000, num.genes * num.barcodes, prob = prob)
-  #mat <- Matrix::Matrix(gene.counts, nrow = num.genes, ncol = num.barcodes, sparse = TRUE)
-  #mat <- CreateSeuratObject(mat)
-  #return(mat) 
+  load("sc_counts_probability_vector.Robj")
+  gene.counts <- sample.int(4000, num.genes * num.barcodes, prob = probs)
+  mat <- Matrix::Matrix(gene.counts, nrow = num.genes, ncol = num.barcodes, sparse = TRUE)
+  mat <- CreateSeuratObject(mat)
+  return(mat) 
 } 
 
