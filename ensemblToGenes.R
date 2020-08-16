@@ -35,7 +35,7 @@ ensemblToGenes <- function(data = data,
   data <- dplyr::inner_join(data, ensembl, by = column)
   data <- dplyr::select(data, c(external_gene_name, everything()), -column)
   if(isTRUE(make.genes.unique)) {
-    data <- mutate(data, external_gene_name = make.unique(external_gene_name, sep = "_"))
+    data <- dplyr::mutate(data, external_gene_name = make.unique(external_gene_name, sep = "_"))
   } 
   data <- dplyr::rename(data, !!column := external_gene_name)
   return(data)
