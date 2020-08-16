@@ -2,6 +2,7 @@
 #' @param data A dataframe
 #' @param column The name of the column that has the Ensembl IDs. 
 #' @param type Whether the type of Ensembl IDs are transcript or gene
+#' @param make.genes.unique Choose whether you want only unique gene names. Duplicated genes will be separated by a dash. 
 #' @return A dataframe with column now as Ensembl IDs
 #' @examples
 #' ensemblToGenes(data = counts.table, column = "Genes", type = "gene")
@@ -9,7 +10,8 @@
 
 ensemblToGenes <- function(data = data, 
                            column = column,
-                           type = type) {
+                           type = type,
+                           make.genes.unique = TRUE) {
   
   if(type == "gene"){ 
     
@@ -32,7 +34,9 @@ ensemblToGenes <- function(data = data,
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
   data <- dplyr::select(data, c(external_gene_name, everything()), -column)
+  if(isTRUE(make.genes.unique)) {
+    data <- mutate(data, external_gene_name = make.unique(external_gene_name, sep = "_"))
+  } 
   data <- dplyr::rename(data, !!column := external_gene_name)
   return(data)
 } 
-
