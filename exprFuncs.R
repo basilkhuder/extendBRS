@@ -7,14 +7,17 @@
 #' cpmGeneExpr(counts, gene.col = "Genes", goi = c("Gene_1","Gene_2"))
 #' @export
 
-cpmGeneExpr <- function(counts, gene.col, goi) { 
+cpmGeneExpr <- function(counts, gene.col, goi, log = TRUE) { 
   counts <- tibble::column_to_rownames(counts, var = gene.col)
-  counts <- edgeR::cpm(counts, log = TRUE)
+  if(isTRUE(log)){ 
+    counts <- edgeR::cpm(counts, log = TRUE) 
+  } else { 
+        counts <- edgeR::cpm(counts, log = FALSE)
+  } 
   counts <- tibble::as_tibble(counts, rownames = gene.col)
   counts <- dplyr::filter(counts, !!as.name(gene.col) %in% c(goi))
   counts <- tidyr::pivot_longer(counts,cols = -all_of(gene.col), names_to = "Samples",
                                 values_to = "CPM")
   return(counts)
-  
 } 
 
