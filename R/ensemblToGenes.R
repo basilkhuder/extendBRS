@@ -15,7 +15,7 @@ ensemblToGenes <- function(data = data,
                            keep.ensembl.ids = FALSE
                            make.genes.unique = TRUE) {
   
-  
+  type <- stringr::str_to_lower(type)
   if(type == "gene"){ 
     
     download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
@@ -44,12 +44,9 @@ ensemblToGenes <- function(data = data,
     data <- dplyr::rename(data,  "Gene_ID" = external_gene_name)
     
   } else { 
-      
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
-    
   }
-  
   if(isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(external_gene_name, sep = "_"))
   } 
