@@ -1,0 +1,19 @@
+Package: extendBRS
+Title: extendBRS
+Version: 1.0.0
+Authors@R: 
+    person(given = "Basil",
+           family = "Khuder",
+           role = c("aut", "cre"),
+	   email = "bkhuderr@outlook.com")
+Description: Just random R functions that make bulk RNA-Seq and sequence analysis easier
+Encoding: UTF-8
+LazyData: true
+biocViews:
+Depends:
+  BiocManager,
+  edgeR,
+  DESeq2,
+  SingleCellExperiment,
+  scater,
+  tidyverse
