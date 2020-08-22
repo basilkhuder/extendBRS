@@ -1,2 +1,5 @@
 export(ensemblToGenes)
 export(cpmGeneExpr)
+export(ensemblToGenes.data.frame)
+export(ensemblToGenes.tbl_df)
+export(ensemblToGenes.matrix)
