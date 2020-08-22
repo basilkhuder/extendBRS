@@ -73,7 +73,7 @@ ensemblToGenes.data.frame <- function(data = data,
   
   if(identical(column, "rownames")) { 
     rownames <- rownames(data)
-    data <- mutate(data, "ensembl_ids" = rownames)
+    data <- dplyr::mutate(data, "ensembl_ids" = rownames)
     rownames(data) <- NULL
     column <- "ensembl_ids"
     check.rows = TRUE
