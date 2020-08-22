@@ -59,6 +59,7 @@ ensemblToGenes.tbl_df <- function(data = data,
   return(data)
 } 
 
+
 ensemblToGenes.data.frame <- function(data = data, 
                                   column = column,
                                   type = type,
@@ -73,7 +74,7 @@ ensemblToGenes.data.frame <- function(data = data,
   
   if(identical(column, "rownames")) { 
     rownames <- rownames(data)
-    data <- dplyr::mutate(data, "ensembl_ids" = rownames)
+    data <- mutate(data, "ensembl_ids" = rownames)
     rownames(data) <- NULL
     column <- "ensembl_ids"
     check.rows = TRUE
@@ -124,26 +125,22 @@ ensemblToGenes.data.frame <- function(data = data,
   return(data)
 } 
 
-ensemblToGenes.default <- function(data = data, 
-                                  column = column,
-                                  type = type,
-                                  keep.ensembl.ids = FALSE,
-                                  make.genes.unique = TRUE,
-                                  ...) { 
+ensemblToGenes.matrix <- function(data = data, 
+                                   column = column,
+                                   type = type,
+                                   keep.ensembl.ids = FALSE,
+                                   make.genes.unique = TRUE,
+                                   ...) { 
   
   if(identical(column, "rownames") & make.genes.unique == FALSE){ 
-    stop("For data frames with rownames as genes, make.genes.unique must
+    stop("For data frames/matrices with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
   
-  if(identical(column, "rownames")) { 
-    rownames <- rownames(data)
-    data <- dplyr::mutate(data, "ensembl_ids" = rownames)
-    rownames(data) <- NULL
-    column <- "ensembl_ids"
-    check.rows = TRUE
-  }
-  
+  rownames <- rownames(data)
+  data <- tibble::as_tibble(data, rownames = "ensembl_ids")
+  column <- "ensembl_ids"
+
   type <- stringr::str_to_lower(type)
   if(type == "gene"){ 
     
@@ -179,12 +176,10 @@ ensemblToGenes.default <- function(data = data,
   if(isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
   } 
-  
-  if(isTRUE(check.rows)){ 
     gene.names <- magrittr::extract2(data, "Gene_ID")
     data <- dplyr::select(data, -c(Gene_ID))
+    data <- as.matrix(data)
     rownames(data) <- gene.names
-  }
   
   return(data)
 } 
