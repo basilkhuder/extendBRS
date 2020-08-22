@@ -1,2 +1,2 @@
 export(ensemblToGenes)
-export(exprFuncs)
+export(cpmGeneExpr)
