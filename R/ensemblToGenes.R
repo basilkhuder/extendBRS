@@ -67,7 +67,7 @@ ensemblToGenes.data.frame <- function(data = data,
                                   make.genes.unique = TRUE,
                                   ...) { 
   
-  if(identical(column, "rownames") & make.genes.unique == FALSE){ 
+  if(identical(column, "rownames") && make.genes.unique == FALSE){ 
     stop("For data frames with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
@@ -132,7 +132,7 @@ ensemblToGenes.matrix <- function(data = data,
                                    make.genes.unique = TRUE,
                                    ...) { 
   
-  if(identical(column, "rownames") & make.genes.unique == FALSE){ 
+  if(identical(column, "rownames") && make.genes.unique == FALSE){ 
     stop("For data frames/matrices with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
