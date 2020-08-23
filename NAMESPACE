@@ -1,4 +1,5 @@
 S3method(ensemblToGenes, data.frame)
 S3method(ensemblToGenes, tbl_df)
 S3method(ensemblToGenes, matrix)
+export(ensemblToGenes)
 export(cpmGeneExpr)
