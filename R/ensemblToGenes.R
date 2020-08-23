@@ -10,7 +10,7 @@
 #' ensemblToGenes(data = counts.table, column = "Genes", type = "gene")
 #' @export
 
-ensemblToGenes <- function(data, ...) {
+ensemblToGenes <- function(x, ...) {
   UseMethod("ensemblToGenes")
 }
 
