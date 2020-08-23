@@ -3,7 +3,7 @@
 #' @param column The name of the column that has the Ensembl IDs. If IDs are stored as rownames, use column = "rownames"
 #' @param type Whether the type of Ensembl IDs are transcript or gene
 #' @param keep.ensembl.ids Whether to keep Ensembl IDs as a separate column
-#' @param make.genes.unique Choose whether you want only unique gene names. Duplicated genes will be separated by a dash. If IDs are stored as rownames, 
+#' @param make.genes.unique Choose whether you want only unique gene names. Duplicated genes will be separated by a dash. If IDs are stored as rownames,
 #' make.genes.unique must be TRUE
 #' @return A dataframe with column now as Ensembl IDs
 #' @examples
@@ -12,174 +12,178 @@
 
 ensemblToGenes <- function(data, ...) {
   UseMethod("ensemblToGenes")
-} 
+}
 
-ensemblToGenes.tbl_df <- function(data = data, 
+#' @export
+ensemblToGenes.tbl_df <- function(data = data,
                                   column = column,
                                   type = type,
                                   keep.ensembl.ids = FALSE,
                                   make.genes.unique = TRUE,
-                                  ...) { 
-  
+                                  ...) {
+
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
+  if(type == "gene"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_gene_id)
-    
-  } else if (type == "transcript"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt", 
+
+  } else if (type == "transcript"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt",
                   destfile = "ensembl_transcript_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_transcript_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_transcript_id)
-    
-  } else { 
+
+  } else {
     stop("Type must be either transcript or gene")
   }
-  
+
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
-  
-  if(isTRUE(keep.ensembl.ids)) { 
-    
+
+  if(isTRUE(keep.ensembl.ids)) {
+
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
     data <- dplyr::rename(data,  "Gene_ID" = external_gene_name)
-    
-  } else { 
+
+  } else {
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
   if(isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
-  } 
+  }
   return(data)
-} 
+}
 
-
-ensemblToGenes.data.frame <- function(data = data, 
+#' @export
+ensemblToGenes.data.frame <- function(data = data,
                                   column = column,
                                   type = type,
                                   keep.ensembl.ids = FALSE,
                                   make.genes.unique = TRUE,
-                                  ...) { 
-  
-  if(identical(column, "rownames") && make.genes.unique == FALSE){ 
+                                  ...) {
+
+  if(identical(column, "rownames") & make.genes.unique == FALSE){
     stop("For data frames with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
-  
-  if(identical(column, "rownames")) { 
+
+  if(identical(column, "rownames")) {
     rownames <- rownames(data)
     data <- mutate(data, "ensembl_ids" = rownames)
     rownames(data) <- NULL
     column <- "ensembl_ids"
     check.rows = TRUE
   }
-  
+
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
+  if(type == "gene"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_gene_id)
-    
-  } else if (type == "transcript"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt", 
+
+  } else if (type == "transcript"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt",
                   destfile = "ensembl_transcript_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_transcript_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_transcript_id)
-    
-  } else { 
+
+  } else {
     stop("Type must be either transcript or gene")
   }
-  
+
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
-  
-  if(isTRUE(keep.ensembl.ids)) { 
-    
+
+  if(isTRUE(keep.ensembl.ids)) {
+
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
-    
-  } else { 
+
+  } else {
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
   if(isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
-  } 
-  
-  if(isTRUE(check.rows)){ 
+  }
+
+  if(isTRUE(check.rows)){
     gene.names <- magrittr::extract2(data, "Gene_ID")
     data <- dplyr::select(data, -c(Gene_ID))
     rownames(data) <- gene.names
   }
-  
-  return(data)
-} 
 
-ensemblToGenes.matrix <- function(data = data, 
+  return(data)
+}
+
+#' @export
+ensemblToGenes.matrix <- function(data = data,
                                    column = column,
                                    type = type,
                                    keep.ensembl.ids = FALSE,
                                    make.genes.unique = TRUE,
-                                   ...) { 
-  
-  if(identical(column, "rownames") && make.genes.unique == FALSE){ 
+                                   ...) {
+
+  if(identical(column, "rownames") & make.genes.unique == FALSE){
     stop("For data frames/matrices with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
-  
+
   rownames <- rownames(data)
   data <- tibble::as_tibble(data, rownames = "ensembl_ids")
   column <- "ensembl_ids"
 
+
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt", 
+  if(type == "gene"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_gene_id)
-    
-  } else if (type == "transcript"){ 
-    
-    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt", 
+
+  } else if (type == "transcript"){
+
+    download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_transcript_id_and_gene_names.txt",
                   destfile = "ensembl_transcript_id_and_gene_names.txt")
     ensembl <- readr::read_tsv("ensembl_transcript_id_and_gene_names.txt")
     data <- dplyr::filter(data, !!as.name(column) %in% ensembl$ensembl_transcript_id)
-    
-  } else { 
+
+  } else {
     stop("Type must be either transcript or gene")
   }
-  
+
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
-  
-  if(isTRUE(keep.ensembl.ids)) { 
-    
+
+  if(isTRUE(keep.ensembl.ids)) {
+
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
-    
-  } else { 
+
+  } else {
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
   if(isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
-  } 
+  }
+
     gene.names <- magrittr::extract2(data, "Gene_ID")
     data <- dplyr::select(data, -c(Gene_ID))
     data <- as.matrix(data)
     rownames(data) <- gene.names
-  
+
   return(data)
-} 
+}
