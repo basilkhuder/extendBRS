@@ -56,11 +56,7 @@ cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) {
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
   } 
-  counts <- tibble::as_tibble(counts, rownames = gene.col)
-  counts <- dplyr::filter(counts, !!as.name(gene.col) %in% goi)
-  counts <- tidyr::pivot_longer(counts,cols = -all_of(gene.col), names_to = "Samples",
-                                values_to = "CPM")
-  return(counts)
+  return(counts[goi,])
 } 
 
 
