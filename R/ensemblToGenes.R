@@ -23,7 +23,7 @@ ensemblToGenes.tbl_df <- function(data = data,
                                   ...) {
 
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){
+  if (type == "gene"){
 
     download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
@@ -44,7 +44,7 @@ ensemblToGenes.tbl_df <- function(data = data,
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
 
-  if(isTRUE(keep.ensembl.ids)) {
+  if (isTRUE(keep.ensembl.ids)) {
 
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
@@ -54,7 +54,7 @@ ensemblToGenes.tbl_df <- function(data = data,
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
-  if(isTRUE(make.genes.unique)) {
+  if (isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
   }
   return(data)
@@ -68,12 +68,12 @@ ensemblToGenes.data.frame <- function(data = data,
                                   make.genes.unique = TRUE,
                                   ...) {
 
-  if(identical(column, "rownames") & make.genes.unique == FALSE){
+  if (identical(column, "rownames") & make.genes.unique == FALSE){
     stop("For data frames with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
 
-  if(identical(column, "rownames")) {
+  if (identical(column, "rownames")) {
     rownames <- rownames(data)
     data <- mutate(data, "ensembl_ids" = rownames)
     rownames(data) <- NULL
@@ -82,7 +82,7 @@ ensemblToGenes.data.frame <- function(data = data,
   }
 
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){
+  if (type == "gene"){
 
     download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
@@ -103,7 +103,7 @@ ensemblToGenes.data.frame <- function(data = data,
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
 
-  if(isTRUE(keep.ensembl.ids)) {
+  if (isTRUE(keep.ensembl.ids)) {
 
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
@@ -113,7 +113,7 @@ ensemblToGenes.data.frame <- function(data = data,
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
-  if(isTRUE(make.genes.unique)) {
+  if (isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
   }
 
@@ -134,7 +134,7 @@ ensemblToGenes.matrix <- function(data = data,
                                    make.genes.unique = TRUE,
                                    ...) {
 
-  if(identical(column, "rownames") & make.genes.unique == FALSE){
+  if (identical(column, "rownames") & make.genes.unique == FALSE){
     stop("For data frames/matrices with rownames as genes, make.genes.unique must
          be set to TRUE")
   }
@@ -145,7 +145,7 @@ ensemblToGenes.matrix <- function(data = data,
 
 
   type <- stringr::str_to_lower(type)
-  if(type == "gene"){
+  if (type == "gene"){
 
     download.file("https://basilkhuder.s3.us-east-2.amazonaws.com/ensembl_id_and_gene_names.txt",
                   destfile = "ensembl_id_and_gene_names.txt")
@@ -166,7 +166,7 @@ ensemblToGenes.matrix <- function(data = data,
   colnames(ensembl)[1] <- column
   data <- dplyr::inner_join(data, ensembl, by = column)
 
-  if(isTRUE(keep.ensembl.ids)) {
+  if (isTRUE(keep.ensembl.ids)) {
 
     data <- dplyr::select(data, c(column, external_gene_name, everything()))
     data <- dplyr::rename(data,  "Ensembl_ID" := !!column)
@@ -176,10 +176,10 @@ ensemblToGenes.matrix <- function(data = data,
     data <- dplyr::select(data, c(external_gene_name, everything()), -column)
     data <- dplyr::rename(data, "Gene_ID" = external_gene_name)
   }
-  if(isTRUE(make.genes.unique)) {
+  if (isTRUE(make.genes.unique)) {
     data <- dplyr::mutate(data, Gene_ID = make.unique(Gene_ID, sep = "_"))
   }
-
+  
     gene.names <- magrittr::extract2(data, "Gene_ID")
     data <- dplyr::select(data, -c(Gene_ID))
     data <- as.matrix(data)
