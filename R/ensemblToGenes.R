@@ -187,3 +187,19 @@ ensemblToGenes.matrix <- function(data = data,
 
   return(data)
 }
+
+genesToEntrez <- function(data, 
+                          column,
+                          drop.na = FALSE) { 
+  download.file(url = "https://basilkhuder.s3.us-east-2.amazonaws.com/ncbi_gene_id_and_gene_names.txt",
+                destfile = "ncbi_genes.txt")
+  ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
+  colnames(ncbi_ids[2]) <- column
+  data <- dplyr::full_join(ncbi_ids, data)
+  
+  if (isTRUE(drop.na)){ 
+    data <- tidyr::drop_na(data, NCBI_ID)
+  }
+  
+  return(data)
+}
