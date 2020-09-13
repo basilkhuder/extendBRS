@@ -14,7 +14,7 @@ cpmGeneExpr <- function(counts, ...) {
 
 cpmGeneExpr.tbl_df <- function(counts, gene.col, goi, log = TRUE) { 
   counts <- tibble::column_to_rownames(counts, var = gene.col)
-  if(isTRUE(log)){ 
+  if (isTRUE(log)){ 
     counts <- edgeR::cpm(counts, log = TRUE) 
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
@@ -27,18 +27,18 @@ cpmGeneExpr.tbl_df <- function(counts, gene.col, goi, log = TRUE) {
 } 
 
 cpmGeneExpr.data.frame <- function(counts, gene.col, goi, log = TRUE) { 
-  if(!identical(gene.col, "rownames")) { 
+  if (!identical(gene.col, "rownames")) { 
     rownames(counts) <- magrittr::extract2(counts, gene.col) 
     counts <- dplyr::select(counts, -gene.col)
     } 
   
-  if(isTRUE(log)){ 
+  if (isTRUE(log)){ 
     counts <- edgeR::cpm(counts, log = TRUE) 
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
   } 
   
-  if(identical(gene.col, "rownames")) { 
+  if (identical(gene.col, "rownames")) { 
     return(counts[goi,])
     } 
   
@@ -51,7 +51,7 @@ cpmGeneExpr.data.frame <- function(counts, gene.col, goi, log = TRUE) {
 
 cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) { 
   
-  if(isTRUE(log)){ 
+  if (isTRUE(log)){ 
     counts <- edgeR::cpm(counts, log = TRUE) 
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
