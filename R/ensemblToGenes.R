@@ -196,6 +196,7 @@ ensemblToGenes.matrix <- function(data = data,
 #' @examples
 #' genesToEntrez(data, column = "Gene_Names", drop.na = TRUE) 
 #' @export
+
 genesToEntrez <- function(data, 
                           column,
                           drop.na = FALSE) { 
