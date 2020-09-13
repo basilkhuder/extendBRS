@@ -1,4 +1,4 @@
-#' Takes a dataframe and a column (or rownames) that has Ensembl IDs and returns dataframe with a column (or rownames) of gene names. .
+#' Takes a dataframe and a column (or rownames) that has Ensembl IDs and returns dataframe with a column (or rownames) of gene names.
 #' @param data A dataframe
 #' @param column The name of the column that has the Ensembl IDs. If IDs are stored as rownames, use column = "rownames"
 #' @param type Whether the type of Ensembl IDs are transcript or gene
