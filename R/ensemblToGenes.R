@@ -208,7 +208,7 @@ genesToEntrez.tbl_df <- function(data,
                 destfile = "ncbi_genes.txt")
   ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
   colnames(ncbi_ids[2]) <- column
-  data <- dplyr::full_join(ncbi_ids, data)
+  data <- dplyr::right_join(ncbi_ids, data)
   
   if (isTRUE(drop.na)){ 
     data <- tidyr::drop_na(data, NCBI_ID)
