@@ -251,8 +251,9 @@ genesToEntrez.data.frame <- function(data,
     gene.names <- magrittr::extract2(data, "Gene_Name")
     data <- dplyr::select(data, -c(Gene_Name))
     rownames(data) <- gene.names
+    return(data)
   }
   
+  data <- as.data.frame(data)
   return(data)
-  
 }
