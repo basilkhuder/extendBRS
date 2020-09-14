@@ -75,7 +75,7 @@ ensemblToGenes.data.frame <- function(data = data,
   
   if (identical(column, "rownames")) {
     rownames <- rownames(data)
-    data <- mutate(data, "ensembl_ids" = rownames)
+    data <- dplyr::mutate(data, "ensembl_ids" = rownames)
     rownames(data) <- NULL
     column <- "ensembl_ids"
     check.rows = TRUE
@@ -188,9 +188,9 @@ ensemblToGenes.matrix <- function(data = data,
   return(data)
 }
 
-#' Takes a dataframe and a column with gene names (or a with rownames as genes) and returns dataframe with NCBI IDs (formerly Entrez IDs.) 
-#' @param data A dataframe
-#' @param column The name of the column that has the gene names. If genes are in rows, use column = "rownames"
+#' Takes a dataframe with a column of gene names, data frame with rownames as genes, or a vector of genes and returns dataframe with NCBI IDs (formerly Entrez) 
+#' @param data A dataframe or a vector
+#' @param column The name of the column that has the gene names. If genes are in rows, use column = "rownames", if vector use column = "vector"
 #' @param drop.na Remove rows of genes that do not have an NCBI ID
 #' @return Dataframe with NCBI IDs in a column
 #' @examples
@@ -232,7 +232,7 @@ genesToEntrez.data.frame <- function(data,
   
   if (identical(column, "rownames")) {
     rownames <- rownames(data)
-    data <- mutate(data, "Gene_Name" = rownames)
+    data <- dplyr::mutate(data, "Gene_Name" = rownames)
     rownames(data) <- NULL
     check.rows = TRUE
     colnames(ncbi_ids[2]) <- "Gene_Name"
@@ -255,5 +255,17 @@ genesToEntrez.data.frame <- function(data,
   }
   
   data <- as.data.frame(data)
+  return(data)
+}
+
+genesToEntrez.character <- function(data,
+                                    column,
+                                    drop.na = FALSE) { 
+  
+  download.file(url = "https://basilkhuder.s3.us-east-2.amazonaws.com/ncbi_gene_id_and_gene_names.txt",
+                destfile = "ncbi_genes.txt")
+  ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
+  data <- dplyr::tibble(Gene_Name = data)
+  data <- dplyr::right_join(ncbi_ids, data)
   return(data)
 }
