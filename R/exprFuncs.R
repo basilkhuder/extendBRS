@@ -59,7 +59,7 @@ cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) {
   return(counts[goi,])
 } 
 
-ffilterByExprAcross <- function(counts.list, 
+filterByExprAcross <- function(counts.list, 
                                groups.list, 
                                min.counts = 10, 
                                calc.norm.factors = FALSE){ 
@@ -74,8 +74,8 @@ ffilterByExprAcross <- function(counts.list,
   cpm.counts <- purrr::imap(cpm.counts, ~ tibble::as_tibble(.x, rownames = gene.col[[.y]]))
   min.group <- purrr::map(groups.list, ~ min(table(.x)))
   
-  filtered.genes <- purrr::imap(cpm.counts, ~ dplyr::summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
-  filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x, .y, by = "Genes"))
+  filtered.genes <- purrr::imap(cpm.counts, ~ summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
+  filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x,.y,by = "Genes"))
   filtered.genes <- dplyr::mutate(filtered.genes, 
                                   result = dplyr::if_else(test$sum.x < min.group[[1]] | test$sum.y < min.group[[2]],
                                                    "Filter",
@@ -94,7 +94,6 @@ ffilterByExprAcross <- function(counts.list,
   
   return(counts.list)
 }
-
 
 summarizeFunc <- function(df, 
                           gene.col, 
