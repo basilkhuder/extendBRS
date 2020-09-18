@@ -59,25 +59,25 @@ cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) {
   return(counts[goi,])
 } 
 
-filterByExprAcross <- function(counts.list, 
-                                groups.list, 
-                                min.counts = 10, 
-                                calc.norm.factors = FALSE){ 
+ffilterByExprAcross <- function(counts.list, 
+                               groups.list, 
+                               min.counts = 10, 
+                               calc.norm.factors = FALSE){ 
   
   gene.col <- purrr::map(counts.list, ~ colnames(.x)[1])
-  med.lib.size <- purrr::imap(counts.list, ~ select(.x, -gene.col[[.y]]))
+  med.lib.size <- purrr::imap(counts.list, ~ dplyr::select(.x, -gene.col[[.y]]))
   med.lib.size <- purrr::map(med.lib.size, colSums)
   med.lib.size <- purrr::map(med.lib.size, median)
   min.counts.cpm <- purrr::imap(med.lib.size, ~ min.counts / .x * 1e6)
-  cpm.counts <- purrr::imap(counts.list, ~ column_to_rownames(.x, var = gene.col[[.y]]))
+  cpm.counts <- purrr::imap(counts.list, ~ tibble::column_to_rownames(.x, var = gene.col[[.y]]))
   cpm.counts <- purrr::map(cpm.counts, ~ edgeR::cpm(.x, log = FALSE)) 
   cpm.counts <- purrr::imap(cpm.counts, ~ tibble::as_tibble(.x, rownames = gene.col[[.y]]))
   min.group <- purrr::map(groups.list, ~ min(table(.x)))
   
-  filtered.genes <- purrr::imap(cpm.counts, ~summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
-  filtered.genes <- purrr::reduce(filtered.genes, ~full_join(.x,.y,by = "Genes"))
+  filtered.genes <- purrr::imap(cpm.counts, ~ dplyr::summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
+  filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x,.y,by = "Genes"))
   filtered.genes <- dplyr::mutate(filtered.genes, 
-                                  result = if_else(test$sum.x < min.group[[1]] | test$sum.y < min.group[[2]],
+                                  result = dplyr::if_else(test$sum.x < min.group[[1]] | test$sum.y < min.group[[2]],
                                                    "Filter",
                                                    "Keep")) 
   
@@ -99,7 +99,7 @@ filterByExprAcross <- function(counts.list,
 summarizeFunc <- function(df, 
                           gene.col, 
                           min.counts){ 
-  filtered.genes <- dplyr::summarize(df, across(-!!as.name(gene.col), ~.x >= min.counts)) 
+  filtered.genes <- dplyr::summarize(df, dplyr::across(-!!as.name(gene.col), ~.x >= min.counts)) 
   filtered.genes <- dplyr::mutate(filtered.genes, 
                                   Genes = magrittr::extract2(df, gene.col),
                                   sum = rowSums(filtered.genes))
