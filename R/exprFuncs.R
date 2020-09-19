@@ -93,12 +93,11 @@ filterByExprAcross <- function(counts.list,
 summarizeFunc <- function(df, 
                           gene.col, 
                           min.counts){ 
-  filtered.genes <- dplyr::summarize(df, dplyr::across(-!!as.name(gene.col), ~.x >= min.counts)) 
+  filtered.genes <- dplyr::summarize(df, dplyr::across(-{{gene.col}}, ~.x >= min.counts)) 
   filtered.genes <- dplyr::mutate(filtered.genes, 
                                   Genes = magrittr::extract2(df, gene.col),
                                   sum = rowSums(filtered.genes))
   filtered.genes <- dplyr::select(filtered.genes, c(Genes, sum))
   return(filtered.genes)
-  
 }
 
