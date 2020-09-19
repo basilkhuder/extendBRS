@@ -76,12 +76,7 @@ filterByExprAcross <- function(counts.list,
   
   filtered.genes <- purrr::imap(cpm.counts, ~ summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
   filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x,.y,by = "Genes"))
-  filtered.genes <- dplyr::mutate(filtered.genes, 
-                                  result = dplyr::if_else(test$sum.x < min.group[[1]] | test$sum.y < min.group[[2]],
-                                                   "Filter",
-                                                   "Keep")) 
-  
-  filtered.genes <- dplyr::filter(filtered.genes, result == "Keep")
+  filtered.genes <- dplyr::filter(filtered.genes, !(sum.x < min.group[[1]] | sum.y < min.group[[2]]))
   filtered.genes <- dplyr::pull(filtered.genes, Genes)
   
   counts.list <- purrr::imap(counts.list, ~ dplyr::filter(.x, !!as.name(gene.col[[.y]]) %in% filtered.genes))
