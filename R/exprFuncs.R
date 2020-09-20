@@ -62,6 +62,30 @@ cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) {
 filterByExprAcross <- function(counts.list, 
                                groups.list, 
                                min.counts = 10, 
+                               calc.norm.factors = FALSE, ...) { 
+  UseMethod("filterByExprAcross")
+}
+
+filterByExprAcross.list <- function(counts.list, ...) {
+  
+  types <- map_chr(data, ~class(.x)[[1]])
+  if (all(types == "data.frame")) {
+    filterByExprAcross.data.frame(counts.list, groups.list, 
+                              min.counts = min.counts, 
+                              calc.norm.factors = calc.norm.factors)
+  }
+  
+  if(all(types == "tbl_df")) { 
+    filterByExprAcross.tbl.df(counts.list, groups.list, 
+                              min.counts = min.counts, 
+                              calc.norm.factors = calc.norm.factors)
+    }
+  
+}
+
+filterByExprAcross.tbl_df <- function(counts.list, 
+                               groups.list, 
+                               min.counts = 10, 
                                calc.norm.factors = FALSE){ 
   
   gene.col <- purrr::map(counts.list, ~ colnames(.x)[1])
