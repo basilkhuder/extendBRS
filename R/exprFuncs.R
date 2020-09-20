@@ -68,7 +68,7 @@ filterByExprAcross <- function(counts.list,
 
 filterByExprAcross.list <- function(counts.list, ...) {
   
-  types <- map_chr(data, ~class(.x)[[1]])
+  types <- purrr::map_chr(data, ~class(.x)[[1]])
   if (all(types == "data.frame")) {
     filterByExprAcross.data.frame(counts.list, groups.list, 
                               min.counts = min.counts, 
