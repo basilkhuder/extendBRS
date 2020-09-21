@@ -96,7 +96,7 @@ filterByExprAcross.tbl_df <- function(counts.list,
   cpm.counts <- purrr::imap(counts.list, ~ tibble::column_to_rownames(.x, var = gene.col[[.y]]))
   cpm.counts <- purrr::map(cpm.counts, ~ edgeR::cpm(.x, log = FALSE)) 
   cpm.counts <- purrr::imap(cpm.counts, ~ tibble::as_tibble(.x, rownames = gene.col[[.y]]))
-  min.group <- purrr::map(groups.list, ~ min(table(.x)))
+  min.group <- purrr::map(dge.groups.list, ~ min(janitor::tabyl(.x)$n))
   
   filtered.genes <- purrr::imap(cpm.counts, ~ summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
   filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x,.y,by = "Genes"))
