@@ -14,9 +14,11 @@ genesToEntrez <- function(data, ...) {
 genesToEntrez.tbl_df <- function(data, 
                           column,
                           drop.na = FALSE) { 
+  
+  genes_file <- tempfile(pattern = "ncbi_genes", fileext = ".txt")
   download.file(url = "https://basilkhuder.s3.us-east-2.amazonaws.com/ncbi_gene_id_and_gene_names.txt",
-                destfile = "ncbi_genes.txt")
-  ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
+                destfile = genes_file)
+  ncbi_ids <- readr::read_tsv(genes_file, col_names = TRUE, col_types = list(col_character(), col_character()))
   colnames(ncbi_ids[2]) <- column
   data <- dplyr::right_join(ncbi_ids, data)
   
@@ -36,9 +38,10 @@ genesToEntrez.data.frame <- function(data,
          be set to TRUE")
     }
   
+  genes_file <- tempfile(pattern = "ncbi_genes", fileext = ".txt")
   download.file(url = "https://basilkhuder.s3.us-east-2.amazonaws.com/ncbi_gene_id_and_gene_names.txt",
-                destfile = "ncbi_genes.txt")
-  ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
+                destfile = genes_file)
+  ncbi_ids <- readr::read_tsv(genes_file, col_names = TRUE, col_types = list(col_character(), col_character()))
   
   if (identical(column, "rownames")) {
     rownames <- rownames(data)
@@ -72,9 +75,10 @@ genesToEntrez.character <- function(data,
                                     column,
                                     drop.na = FALSE) { 
   
+  genes_file <- tempfile(pattern = "ncbi_genes", fileext = ".txt")
   download.file(url = "https://basilkhuder.s3.us-east-2.amazonaws.com/ncbi_gene_id_and_gene_names.txt",
-                destfile = "ncbi_genes.txt")
-  ncbi_ids <- readr::read_tsv("ncbi_genes.txt", col_names = TRUE, col_types = list(col_character(), col_character()))
+                destfile = genes_file)
+  ncbi_ids <- readr::read_tsv(genes_file, col_names = TRUE, col_types = list(col_character(), col_character()))
   data <- dplyr::tibble(Gene_Name = data)
   data <- dplyr::right_join(ncbi_ids, data)
   return(data)
