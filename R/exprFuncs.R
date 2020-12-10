@@ -98,7 +98,7 @@ filterByExprAcross.tbl_df <- function(counts.list,
   cpm.counts <- purrr::imap(cpm.counts, ~ tibble::as_tibble(.x, rownames = gene.col[[.y]]))
   min.group <- purrr::map(dge.groups.list, ~ min(janitor::tabyl(.x)$n))
   
-  filtered.genes <- purrr::imap(cpm.counts, ~ summarize.func(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
+  filtered.genes <- purrr::imap(cpm.counts, ~ summarizeFunc(.x, gene.col[[.y]], min.counts.cpm[[.y]])) 
   filtered.genes <- purrr::reduce(filtered.genes, ~ dplyr::full_join(.x,.y,by = "Genes"))
   filtered.genes <- dplyr::filter(filtered.genes, !(sum.x < min.group[[1]] | sum.y < min.group[[2]]))
   filtered.genes <- dplyr::pull(filtered.genes, Genes)
