@@ -14,7 +14,7 @@ cpmGeneExpr <- function(counts, ...) {
 
 cpmGeneExpr.tbl_df <- function(counts, gene.col, goi, log = TRUE) { 
   counts <- tibble::column_to_rownames(counts, var = gene.col)
-  if (log){ 
+  if (log) { 
     counts <- edgeR::cpm(counts, log = TRUE) 
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
@@ -51,7 +51,7 @@ cpmGeneExpr.data.frame <- function(counts, gene.col, goi, log = TRUE) {
 
 cpmGeneExpr.matrix <- function(counts, gene.col, goi, log = TRUE) { 
   
-  if (log){ 
+  if (log) { 
     counts <- edgeR::cpm(counts, log = TRUE) 
   } else { 
         counts <- edgeR::cpm(counts, log = FALSE)
