@@ -75,7 +75,7 @@ filterByExprAcross.list <- function(counts.list, ...) {
                               calc.norm.factors = calc.norm.factors)
   }
   
-  if(all(types == "tbl_df")) { 
+  if (all(types == "tbl_df")) { 
     filterByExprAcross.tbl.df(counts.list, groups.list, 
                               min.counts = min.counts, 
                               calc.norm.factors = calc.norm.factors)
@@ -107,7 +107,7 @@ filterByExprAcross.tbl_df <- function(counts.list,
   counts.list <- purrr::imap(counts.list, ~ tibble::column_to_rownames(.x, var = gene.col[[.y]]))
   counts.list <- purrr::imap(counts.list, ~ edgeR::DGEList(.x, group = groups.list[[.y]]))
   
-  if(calc.norm.factors) {
+  if (calc.norm.factors) {
     counts.list <- dplyr::map(counts.list, edgerR::calcNormFactors)
   }
   
